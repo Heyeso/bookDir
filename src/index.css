@@ -15,3 +15,11 @@ body,
   /* other formats include: 'woff2', 'truetype, 'opentype',
                             'embedded-opentype', and 'svg' */
 }
+
+@font-face {
+  font-family: "Noto Sans semi-bold";
+  src: local("Noto Sans semi-bold"),
+    url("./assets/fonts/NotoSansDisplay-SemiBold.woff2") format("woff2");
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}
