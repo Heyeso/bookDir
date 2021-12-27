@@ -7,6 +7,8 @@ const ButtonContainer = styled.button`
   background-color: transparent;
   padding: 0;
   border: 0;
+  width: 50px;
+  height: 50px;
   & > .button:hover {
     path {
       fill: ${COLORS.LIGHT_BLUE};

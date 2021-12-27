@@ -1,9 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import { COLORS } from "../../utils/constants";
+import AddNewBook from "./components/addnewbook.button";
 import Logo from "./components/logo";
 
-const LogoContainer = styled.div`
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0 10px;
+`;
+const LogoContainer = styled.section`
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -22,17 +29,21 @@ const LogoTitle = styled.p`
     color: ${COLORS.LIGHT_BLUE};
   }
 `;
+const SearchContainer = styled.section``;
 
 function HomePage() {
   return (
-    <>
+    <PageContainer>
       <LogoContainer>
         <Logo />
         <LogoTitle>
           book<span>Dir</span>
         </LogoTitle>
       </LogoContainer>
-    </>
+      <SearchContainer>
+        <AddNewBook />
+      </SearchContainer>
+    </PageContainer>
   );
 }
 
