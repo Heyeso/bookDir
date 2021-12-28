@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { AddBookVM } from "../../models/serverModel";
 import { COLORS } from "../../utils/constants";
 import AddNewBook from "./components/addnewbook.button";
+import BookItem from "./components/bookitem";
 import Logo from "./components/logo";
 
 const PageContainer = styled.div`
@@ -30,8 +32,37 @@ const LogoTitle = styled.p`
   }
 `;
 const SearchContainer = styled.section``;
-
+const BookListContainer = styled.section``;
+//note: Test Data, Delete
+const testBook: AddBookVM[] = [
+  {
+    isbn: "9781593275846",
+    title: "Eloquent JavaScript, Second Edition",
+    author: "Marijn Haverbeke",
+    publisher: "No Starch Press",
+    pages: 472,
+    publish: new Date("2019-01-16"),
+  },
+  {
+    isbn: "9781203495679",
+    title: "Elaborate C++, First Edition",
+    author: "Heyeso Hodetaryoh",
+    publisher: "Acer Nitro Seven",
+    pages: 123,
+    publish: new Date("2011-12-12"),
+  },
+  {
+    isbn: "9781203495679",
+    title: "Elaborate C++, First Edition",
+    author: "Heyeso Hodetaryoh",
+    publisher: "Acer Nitro Seven",
+    pages: 123,
+    publish: new Date("2011-12-12"),
+  },
+];
 function HomePage() {
+  const [currentItem, setCurrentItem] = useState(-1);
+
   return (
     <PageContainer>
       <LogoContainer>
@@ -43,8 +74,15 @@ function HomePage() {
       <SearchContainer>
         <AddNewBook />
       </SearchContainer>
+      <BookListContainer>
+      </BookListContainer>
     </PageContainer>
   );
 }
 
 export default HomePage;
+
+
+// {testBook.map((element, index) => (
+//   <BookItem key={index} book={element} onClick={() => setCurrentItem(index)} open={currentItem === index}/>
+// ))}

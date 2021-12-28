@@ -25,3 +25,8 @@ body,
   src: local("Noto Sans medium"),
     url("./assets/fonts/NotoSansDisplay-Medium.woff2") format("woff2");
 }
+@font-face {
+  font-family: "Noto Sans light";
+  src: local("Noto Sans light"),
+    url("./assets/fonts/NotoSansDisplay-Light.woff2") format("woff2");
+}
