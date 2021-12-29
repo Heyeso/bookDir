@@ -6,6 +6,7 @@ interface Props {
   children: ReactNode;
   tag: ButtonType;
   className?: string
+  onClick?: (e: any) => void;
 }
 
 const ButtonComponent = styled.button<Props>`

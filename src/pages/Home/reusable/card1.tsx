@@ -5,6 +5,7 @@ import Button1, { ButtonType } from "./button1";
 
 interface Props {
   tag: CardType;
+  setOpen: (edit: boolean) => void;
 }
 
 export enum CardType {
@@ -13,7 +14,32 @@ export enum CardType {
   DeleteBook = "deletebook",
 }
 
-const CardComponent = styled.section<Props>`
+const Bg = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #91919183;
+  z-index: 50;
+  backdrop-filter: blur(1px);
+
+  /* imporve performance of blur filter */
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  -webkit-transform: translate3d(0, 0, 0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  transform: translate3d(0, 0, 0);
+  transform: translateZ(0);
+`;
+const CardComponent = styled.section`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
   box-sizing: border-box;
   max-width: 500px;
   margin: 0;
@@ -101,7 +127,7 @@ const CardComponent = styled.section<Props>`
 `;
 
 const EMPTY = "";
-function Card1({ ...rest }: Props) {
+function Card1({ setOpen, ...rest }: Props) {
   const [title, setTitle] = useState(EMPTY);
   const [author, setAuthor] = useState({ fname: EMPTY, lname: EMPTY });
   const [publisher, setPublisher] = useState(EMPTY);
@@ -183,7 +209,11 @@ function Card1({ ...rest }: Props) {
               />
             </div>
             <div className="card-button">
-              <Button1 className="cancel-button" tag={ButtonType.Gray}>
+              <Button1
+                className="cancel-button"
+                tag={ButtonType.Gray}
+                onClick={() => setOpen(false)}
+              >
                 Cancel
               </Button1>
               <Button1 tag={ButtonType.Blue}>
@@ -200,7 +230,11 @@ function Card1({ ...rest }: Props) {
               Are you sure you want to <span>DELETE</span> this book?
             </p>
             <div className="card-button">
-              <Button1 className="cancel-button" tag={ButtonType.Gray}>
+              <Button1
+                className="cancel-button"
+                tag={ButtonType.Gray}
+                onClick={() => setOpen(false)}
+              >
                 Cancel
               </Button1>
               <Button1 tag={ButtonType.Red}>Delete</Button1>
@@ -211,7 +245,14 @@ function Card1({ ...rest }: Props) {
         return <></>;
     }
   };
-  return <CardComponent {...rest}>{cardFn(rest.tag)}</CardComponent>;
+    
+    
+  return (
+    <>
+      <CardComponent {...rest}>{cardFn(rest.tag)}</CardComponent>
+      <Bg></Bg>
+    </>
+  );
 }
 
 export default Card1;

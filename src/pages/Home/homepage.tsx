@@ -72,11 +72,11 @@ const testBook: AddBookVM[] = [
   },
 ];
 const EMPTY = "";
-const RESET_ITEM = -1;
+const RESET_ITEM = 0;
 function HomePage() {
   const [currentItem, setCurrentItem] = useState(RESET_ITEM);
   const [search, setSearch] = useState(EMPTY);
-
+  const [newbook, setNewbook] = useState(false);
   return (
     <PageContainer>
       <LogoContainer>
@@ -87,18 +87,15 @@ function HomePage() {
       </LogoContainer>
       <SearchContainer>
         <SearchBar search={search} setSearch={setSearch} />
-        <AddNewBook title="Add new book." />
+        <AddNewBook title="Add new book." onClick={() => setNewbook(true)}/>
+        {newbook && <Card1 tag={CardType.NewBook} setOpen={setNewbook}/>}
       </SearchContainer>
       <BookListContainer>
         {testBook.map((element, index) => (
           <BookItem
             key={index}
             book={element}
-            onClick={() =>
-              currentItem === index
-                ? setCurrentItem(RESET_ITEM)
-                : setCurrentItem(index)
-            }
+            onClick={() => setCurrentItem(index)}
             open={currentItem === index}
           />
         ))}
