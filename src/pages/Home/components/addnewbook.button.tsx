@@ -16,10 +16,12 @@ const ButtonContainer = styled.button`
     }
   }
 `;
-
-function AddNewBook() {
+interface Props {
+  title?: string | undefined;
+}
+function AddNewBook({title, ...rest}: Props) {
   return (
-    <ButtonContainer>
+    <ButtonContainer title={title}>
       <svg
         className="button"
         width={50}

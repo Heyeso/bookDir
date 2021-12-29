@@ -60,6 +60,7 @@ const BookItemContainer = styled.div`
     }
   }
   &.open {
+    margin: 20px 0;
     height: fit-content;
     background-color: ${COLORS.WHITE};
     .placeholder {
