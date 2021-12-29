@@ -5,7 +5,9 @@ import { COLORS } from "../../../utils/constants";
 import EditIcon from "./../../../assets/edit.icon.svg";
 import ClosedBookIcon from "./../../../assets/closed-book.icon.svg";
 import OpenedBookIcon from "./../../../assets/opened-book.icon.svg";
+import DeleteIcon from "./../../../assets/delete.icon.svg";
 import PlaceholderBook from "./../../../assets/placeholder.png";
+import Card1, { CardType } from "../reusable/card1";
 
 const BookItemContainer = styled.div`
   box-sizing: border-box;
@@ -112,7 +114,8 @@ const BookItemContainer = styled.div`
       }
     }
     .bookIcon,
-    .editIcon {
+    .editIcon,
+    .deleteIcon {
       width: 40px;
       height: 40px;
       margin: 0px;
@@ -124,6 +127,14 @@ const BookItemContainer = styled.div`
       cursor: pointer;
       margin-left: auto;
       background-image: url(${EditIcon});
+      opacity: 0.5;
+      &:hover {
+        opacity: 1;
+      }
+    }
+    .deleteIcon {
+      cursor: pointer;
+      background-image: url(${DeleteIcon});
       opacity: 0.5;
       &:hover {
         opacity: 1;
@@ -170,6 +181,10 @@ function BookItemClosed({ book }: Props) {
 }
 
 function BookItemOpen({ book }: Props) {
+
+  const [edit, setEdit] = useState(false);
+  const [deletebook, setDeletebook] = useState(false);
+
   return (
     <>
       <div className="placeholder"></div>
@@ -195,8 +210,11 @@ function BookItemOpen({ book }: Props) {
           </p>
         </div>
       </section>
-      <div className="editIcon"></div>
+      <div title="Edit Book." className="editIcon" onClick={() => setEdit(true)}></div>
+      <div title="Delete Book." className="deleteIcon" onClick={() => setDeletebook(true)}></div>
       <div className="bookIcon"></div>
+      {edit && <Card1 tag={CardType.EditBook} setOpen={setEdit}/>}
+      {deletebook && <Card1 tag={CardType.DeleteBook} setOpen={setDeletebook}/>}
     </>
   );
 }
