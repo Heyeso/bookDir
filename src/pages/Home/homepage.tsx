@@ -6,6 +6,7 @@ import AddNewBook from "./components/addnewbook.button";
 import BookItem from "./components/bookitem";
 import Logo from "./components/logo";
 import SearchBar from "./components/searchbar";
+import Card1, { CardType } from "./reusable/card1";
 
 const PageContainer = styled.div`
   max-width: 1340px;

@@ -5,6 +5,7 @@ import { COLORS } from "../../../utils/constants";
 interface Props {
   children: ReactNode;
   tag: ButtonType;
+  className?: string
 }
 
 const ButtonComponent = styled.button<Props>`
@@ -45,7 +46,7 @@ const ButtonStyles = {
     color: ${COLORS.GRAY3};
     border: 2px solid ${COLORS.GRAY3};
     &:hover {
-      background-color: #e0e0e07d; /* GRAY1 */
+      background-color: #acacac7b; /* GRAY1 */
     }
   `,
   red: css`
