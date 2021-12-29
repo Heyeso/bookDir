@@ -1,17 +1,18 @@
-import React, { ReactNode, useState } from "react";
-import styled, { css } from "styled-components";
+import React, { useState } from "react";
+import styled from "styled-components";
 import { COLORS } from "../../../utils/constants";
 import Button1, { ButtonType } from "./button1";
 
 interface Props {
   tag: CardType;
   setOpen: (edit: boolean) => void;
+  setData: (data: Object | null) => void;
 }
 
 export enum CardType {
-  NewBook = "newbook",
-  EditBook = "editbook",
-  DeleteBook = "deletebook",
+  NewBook = "newBook",
+  EditBook = "editBook",
+  DeleteBook = "deleteBook",
 }
 
 const Bg = styled.div`
@@ -127,7 +128,7 @@ const CardComponent = styled.section`
 `;
 
 const EMPTY = "";
-function Card1({ setOpen, ...rest }: Props) {
+function Card1({ setOpen, setData, ...rest }: Props) {
   const [title, setTitle] = useState(EMPTY);
   const [author, setAuthor] = useState({ fname: EMPTY, lname: EMPTY });
   const [publisher, setPublisher] = useState(EMPTY);
@@ -212,11 +213,14 @@ function Card1({ setOpen, ...rest }: Props) {
               <Button1
                 className="cancel-button"
                 tag={ButtonType.Gray}
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setData(null);
+                  setOpen(false);
+                }}
               >
                 Cancel
               </Button1>
-              <Button1 tag={ButtonType.Blue}>
+              <Button1 tag={ButtonType.Blue} onClick={() => submitFn(card)}>
                 {card === CardType.NewBook ? "Confirm" : "Update"}
               </Button1>
             </div>
@@ -233,11 +237,16 @@ function Card1({ setOpen, ...rest }: Props) {
               <Button1
                 className="cancel-button"
                 tag={ButtonType.Gray}
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setData(null);
+                  setOpen(false);
+                }}
               >
                 Cancel
               </Button1>
-              <Button1 tag={ButtonType.Red}>Delete</Button1>
+              <Button1 tag={ButtonType.Red} onClick={() => submitFn(card)}>
+                Delete
+              </Button1>
             </div>
           </>
         );
@@ -245,8 +254,41 @@ function Card1({ setOpen, ...rest }: Props) {
         return <></>;
     }
   };
-    
-    
+
+  const submitFn = (card: CardType) => {
+    switch (card) {
+      case CardType.NewBook:
+        setOpen(false);
+        return setData({
+          isbn: isbn,
+          title: title,
+          author: author.lname + " " + author.fname,
+          publisher: publisher,
+          pages: pages,
+          type: CardType.NewBook,
+        });
+      case CardType.EditBook:
+        setOpen(false);
+        return setData({
+          isbn: isbn,
+          title: title,
+          author: author,
+          publisher: publisher,
+          pages: pages,
+          type: CardType.EditBook,
+        });
+      case CardType.DeleteBook:
+        setOpen(false);
+        return setData({
+          delete: true,
+          type: CardType.DeleteBook,
+        });
+      default:
+        setOpen(false);
+        return setData(null);
+    }
+  };
+
   return (
     <>
       <CardComponent {...rest}>{cardFn(rest.tag)}</CardComponent>

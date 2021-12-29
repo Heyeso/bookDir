@@ -77,6 +77,7 @@ function HomePage() {
   const [currentItem, setCurrentItem] = useState(RESET_ITEM);
   const [search, setSearch] = useState(EMPTY);
   const [newbook, setNewbook] = useState(false);
+  const [newBookData, setNewBookData] = useState<Object | null>(null);
   return (
     <PageContainer>
       <LogoContainer>
@@ -87,8 +88,14 @@ function HomePage() {
       </LogoContainer>
       <SearchContainer>
         <SearchBar search={search} setSearch={setSearch} />
-        <AddNewBook title="Add new book." onClick={() => setNewbook(true)}/>
-        {newbook && <Card1 tag={CardType.NewBook} setOpen={setNewbook}/>}
+        <AddNewBook title="Add new book." onClick={() => setNewbook(true)} />
+        {newbook && (
+          <Card1
+            tag={CardType.NewBook}
+            setOpen={setNewbook}
+            setData={setNewBookData}
+          />
+        )}
       </SearchContainer>
       <BookListContainer>
         {testBook.map((element, index) => (

@@ -184,6 +184,7 @@ function BookItemOpen({ book }: Props) {
 
   const [edit, setEdit] = useState(false);
   const [deletebook, setDeletebook] = useState(false);
+  const [data, setData] = useState<Object | null>(null);
 
   return (
     <>
@@ -213,8 +214,8 @@ function BookItemOpen({ book }: Props) {
       <div title="Edit Book." className="editIcon" onClick={() => setEdit(true)}></div>
       <div title="Delete Book." className="deleteIcon" onClick={() => setDeletebook(true)}></div>
       <div className="bookIcon"></div>
-      {edit && <Card1 tag={CardType.EditBook} setOpen={setEdit}/>}
-      {deletebook && <Card1 tag={CardType.DeleteBook} setOpen={setDeletebook}/>}
+      {edit && <Card1 tag={CardType.EditBook} setOpen={setEdit} setData={setData}/>}
+      {deletebook && <Card1 tag={CardType.DeleteBook} setOpen={setDeletebook} setData={setData}/>}
     </>
   );
 }
