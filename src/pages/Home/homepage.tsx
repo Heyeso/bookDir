@@ -71,8 +71,9 @@ const testBook: AddBookVM[] = [
   },
 ];
 const EMPTY = "";
+const RESET_ITEM = -1;
 function HomePage() {
-  const [currentItem, setCurrentItem] = useState(-1);
+  const [currentItem, setCurrentItem] = useState(RESET_ITEM);
   const [search, setSearch] = useState(EMPTY);
 
   return (
@@ -92,7 +93,11 @@ function HomePage() {
           <BookItem
             key={index}
             book={element}
-            onClick={() => setCurrentItem(index)}
+            onClick={() =>
+              currentItem === index
+                ? setCurrentItem(RESET_ITEM)
+                : setCurrentItem(index)
+            }
             open={currentItem === index}
           />
         ))}
