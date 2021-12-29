@@ -353,6 +353,16 @@ function Card1({ setOpen, setData, ...rest }: Props) {
   };
 
   const ConfirmRequiredEditBook = () => {
+    if (
+      isbn.length < 1 &&
+      pages.length < 1 &&
+      publisher.length < 1 &&
+      title.length < 1 &&
+      (author.fname.length < 1 || author.lname.length < 1)
+    ) {
+      setRequirement("No change has been made.");
+      return false;
+    }
     if (isbn.length < 10 && isbn.length > 0) {
       setRequirement("ISBN # is not the complete length.");
       return false;
