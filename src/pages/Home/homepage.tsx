@@ -6,6 +6,7 @@ import AddNewBook from "./components/addnewbook.button";
 import BookItem from "./components/bookitem";
 import Logo from "./components/logo";
 import SearchBar from "./components/searchbar";
+import Card1, { CardType } from "./reusable/card1";
 
 const PageContainer = styled.div`
   max-width: 1340px;
@@ -71,8 +72,9 @@ const testBook: AddBookVM[] = [
   },
 ];
 const EMPTY = "";
+const RESET_ITEM = -1;
 function HomePage() {
-  const [currentItem, setCurrentItem] = useState(-1);
+  const [currentItem, setCurrentItem] = useState(RESET_ITEM);
   const [search, setSearch] = useState(EMPTY);
 
   return (
@@ -92,7 +94,11 @@ function HomePage() {
           <BookItem
             key={index}
             book={element}
-            onClick={() => setCurrentItem(index)}
+            onClick={() =>
+              currentItem === index
+                ? setCurrentItem(RESET_ITEM)
+                : setCurrentItem(index)
+            }
             open={currentItem === index}
           />
         ))}

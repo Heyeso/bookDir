@@ -16,7 +16,6 @@ const BookItemContainer = styled.div`
   max-width: 1340px;
   border-radius: 5px;
   &.closed {
-    cursor: pointer;
     align-items: center;
     height: 55px;
     background-color: ${COLORS.GRAY4};
@@ -119,6 +118,7 @@ const BookItemContainer = styled.div`
       margin: 0px;
       padding: 0px;
       background-image: url(${OpenedBookIcon});
+      opacity: 0.6;
     }
     .editIcon {
       cursor: pointer;
@@ -126,6 +126,11 @@ const BookItemContainer = styled.div`
       background-image: url(${EditIcon});
       opacity: 0.5;
       &:hover {
+        opacity: 1;
+      }
+    }
+    &:hover {
+      .bookIcon {
         opacity: 1;
       }
     }
