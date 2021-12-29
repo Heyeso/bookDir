@@ -5,11 +5,11 @@ import { COLORS } from "../../utils/constants";
 import AddNewBook from "./components/addnewbook.button";
 import BookItem from "./components/bookitem";
 import Logo from "./components/logo";
+import SearchBar from "./components/searchbar";
 
 const PageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 0;
+  max-width: 1340px;
+  margin: 0 auto;
   padding: 0 10px;
 `;
 const LogoContainer = styled.section`
@@ -31,8 +31,18 @@ const LogoTitle = styled.p`
     color: ${COLORS.LIGHT_BLUE};
   }
 `;
-const SearchContainer = styled.section``;
-const BookListContainer = styled.section``;
+const SearchContainer = styled.section`
+  height: 50px;
+  display: flex;
+  margin-top: 50px;
+  align-items: center;
+  width: 100%;
+`;
+const BookListContainer = styled.section`
+  margin: 50px auto 0;
+  height: fit-content;
+  width: 100%;
+`;
 //note: Test Data, Delete
 const testBook: AddBookVM[] = [
   {
@@ -52,16 +62,18 @@ const testBook: AddBookVM[] = [
     publish: new Date("2011-12-12"),
   },
   {
-    isbn: "9781203495679",
-    title: "Elaborate C++, First Edition",
-    author: "Heyeso Hodetaryoh",
-    publisher: "Acer Nitro Seven",
-    pages: 123,
-    publish: new Date("2011-12-12"),
+    isbn: "9734567495679",
+    title: "Exenorative Java, Third Edition",
+    author: "Hardey Hodetaryoh",
+    publisher: "Dell Experion Seven",
+    pages: 143,
+    publish: new Date("2012-10-22"),
   },
 ];
+const EMPTY = "";
 function HomePage() {
   const [currentItem, setCurrentItem] = useState(-1);
+  const [search, setSearch] = useState(EMPTY);
 
   return (
     <PageContainer>
@@ -72,17 +84,21 @@ function HomePage() {
         </LogoTitle>
       </LogoContainer>
       <SearchContainer>
-        <AddNewBook />
+        <SearchBar search={search} setSearch={setSearch} />
+        <AddNewBook title="Add new book." />
       </SearchContainer>
       <BookListContainer>
+        {testBook.map((element, index) => (
+          <BookItem
+            key={index}
+            book={element}
+            onClick={() => setCurrentItem(index)}
+            open={currentItem === index}
+          />
+        ))}
       </BookListContainer>
     </PageContainer>
   );
 }
 
 export default HomePage;
-
-
-// {testBook.map((element, index) => (
-//   <BookItem key={index} book={element} onClick={() => setCurrentItem(index)} open={currentItem === index}/>
-// ))}
