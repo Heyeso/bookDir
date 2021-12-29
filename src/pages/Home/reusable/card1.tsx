@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { COLORS } from "../../../utils/constants";
 import Button1, { ButtonType } from "./button1";
@@ -45,6 +45,7 @@ const CardComponent = styled.section`
   max-width: 500px;
   margin: 0;
   padding: 20px;
+  padding-bottom: 30px;
   background-color: ${COLORS.GRAY4};
   border-radius: 10px;
   .card-title {
@@ -127,6 +128,20 @@ const CardComponent = styled.section`
   }
 `;
 
+const Requirement = styled.div`
+  background-color: ${COLORS.GRAY1};
+  position: absolute;
+  padding: 5px 0;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: ${COLORS.RED1};
+  font-family: "Noto Sans medium";
+  font-size: 14px;
+  margin: 0 auto;
+`;
+
 const EMPTY = "";
 function Card1({ setOpen, setData, ...rest }: Props) {
   const [title, setTitle] = useState(EMPTY);
@@ -134,6 +149,13 @@ function Card1({ setOpen, setData, ...rest }: Props) {
   const [publisher, setPublisher] = useState(EMPTY);
   const [pages, setPages] = useState(EMPTY);
   const [isbn, setISBN] = useState(EMPTY);
+  const [requirement, setRequirement] = useState(EMPTY);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setRequirement(EMPTY);
+    }, 5000);
+  }, [requirement]);
 
   const cardFn = (card: CardType) => {
     switch (card) {
@@ -147,6 +169,7 @@ function Card1({ setOpen, setData, ...rest }: Props) {
             <div className="title">
               <label htmlFor="title">Title</label>
               <input
+                maxLength={30}
                 type="text"
                 id="title"
                 autoComplete="on"
@@ -159,6 +182,7 @@ function Card1({ setOpen, setData, ...rest }: Props) {
               <label>Author</label>
               <div>
                 <input
+                  maxLength={15}
                   type="text"
                   id="fname"
                   value={author.fname}
@@ -168,6 +192,7 @@ function Card1({ setOpen, setData, ...rest }: Props) {
                   placeholder="First name..."
                 />
                 <input
+                  maxLength={15}
                   type="text"
                   id="lname"
                   value={author.lname}
@@ -181,6 +206,7 @@ function Card1({ setOpen, setData, ...rest }: Props) {
             <div className="publisher">
               <label htmlFor="publisher">Publisher</label>
               <input
+                maxLength={20}
                 type="text"
                 id="publisher"
                 autoComplete="on"
@@ -192,6 +218,7 @@ function Card1({ setOpen, setData, ...rest }: Props) {
             <div className="pages">
               <label htmlFor="pages">Pages</label>
               <input
+                maxLength={5}
                 type="text"
                 id="pages"
                 value={pages}
@@ -202,6 +229,7 @@ function Card1({ setOpen, setData, ...rest }: Props) {
             <div className="isbn">
               <label htmlFor="isbn">ISBN</label>
               <input
+                maxLength={13}
                 type="text"
                 id="isbn"
                 value={isbn}
@@ -258,25 +286,31 @@ function Card1({ setOpen, setData, ...rest }: Props) {
   const submitFn = (card: CardType) => {
     switch (card) {
       case CardType.NewBook:
-        setOpen(false);
-        return setData({
-          isbn: isbn,
-          title: title,
-          author: author.lname + " " + author.fname,
-          publisher: publisher,
-          pages: pages,
-          type: CardType.NewBook,
-        });
+        if (ConfirmRequiredNewBook()) {
+          setOpen(false);
+          return setData({
+            isbn: isbn,
+            title: title,
+            author: author.lname + " " + author.fname,
+            publisher: publisher,
+            pages: pages,
+            type: CardType.NewBook,
+          });
+        }
+        return false;
       case CardType.EditBook:
-        setOpen(false);
-        return setData({
-          isbn: isbn,
-          title: title,
-          author: author,
-          publisher: publisher,
-          pages: pages,
-          type: CardType.EditBook,
-        });
+        if (ConfirmRequiredEditBook()) {
+          setOpen(false);
+          return setData({
+            isbn: isbn,
+            title: title,
+            author: author,
+            publisher: publisher,
+            pages: pages,
+            type: CardType.EditBook,
+          });
+        }
+        return false;
       case CardType.DeleteBook:
         setOpen(false);
         return setData({
@@ -289,9 +323,58 @@ function Card1({ setOpen, setData, ...rest }: Props) {
     }
   };
 
+  const ConfirmRequiredNewBook = () => {
+    if (title.length < 1) {
+      setRequirement("Title's name cannot be empty.");
+      return false;
+    }
+    if (publisher.length < 1) {
+      setRequirement("Publisher's name cannot be empty.");
+      return false;
+    }
+    if (author.fname.length < 1 || author.lname.length < 1) {
+      setRequirement("Author's name cannot be empty.");
+      return false;
+    }
+    if (isbn.length < 10) {
+      setRequirement("ISBN # is not the complete length.");
+      return false;
+    }
+    if (isNaN(Number(isbn))) {
+      setRequirement("ISBN # must contain number characters. (eg. 1234)");
+      return false;
+    }
+    if (isNaN(Number(pages))) {
+      setRequirement("Pages # must contain number characters. (eg. 1234)");
+      return false;
+    }
+
+    return true;
+  };
+
+  const ConfirmRequiredEditBook = () => {
+    if (isbn.length < 10 && isbn.length > 0) {
+      setRequirement("ISBN # is not the complete length.");
+      return false;
+    }
+    if (isNaN(Number(isbn)) && isbn.length > 0) {
+      setRequirement("ISBN # must contain number characters. (eg. 1234)");
+      return false;
+    }
+    if (isNaN(Number(pages)) && isbn.length > 0) {
+      setRequirement("Pages # must contain number characters. (eg. 1234)");
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <>
-      <CardComponent {...rest}>{cardFn(rest.tag)}</CardComponent>
+      <CardComponent {...rest}>
+        {cardFn(rest.tag)}
+        {requirement !== EMPTY && <Requirement>{requirement}</Requirement>}
+      </CardComponent>
       <Bg></Bg>
     </>
   );
