@@ -18,10 +18,11 @@ const ButtonContainer = styled.button`
 `;
 interface Props {
   title?: string | undefined;
+  onClick?: () => void;
 }
 function AddNewBook({title, ...rest}: Props) {
   return (
-    <ButtonContainer title={title}>
+    <ButtonContainer title={title} {...rest}>
       <svg
         className="button"
         width={50}
