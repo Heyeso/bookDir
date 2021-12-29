@@ -28,6 +28,7 @@ export default Button1;
 export enum ButtonType {
   Blue = "blue",
   Gray = "gray",
+  Red = "red",
 }
 
 const ButtonStyles = {
@@ -45,6 +46,14 @@ const ButtonStyles = {
     border: 2px solid ${COLORS.GRAY3};
     &:hover {
       background-color: #e0e0e07d; /* GRAY1 */
+    }
+  `,
+  red: css`
+    background-color: ${COLORS.RED1};
+    color: ${COLORS.WHITE};
+    border: none;
+    &:hover {
+      background-color: ${COLORS.RED2};
     }
   `,
 };
