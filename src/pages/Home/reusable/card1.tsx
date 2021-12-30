@@ -169,7 +169,7 @@ function Card1({ setOpen, setData, ...rest }: Props) {
             <div className="title">
               <label htmlFor="title">Title</label>
               <input
-                maxLength={30}
+                maxLength={40}
                 type="text"
                 id="title"
                 autoComplete="on"
@@ -206,7 +206,7 @@ function Card1({ setOpen, setData, ...rest }: Props) {
             <div className="publisher">
               <label htmlFor="publisher">Publisher</label>
               <input
-                maxLength={20}
+                maxLength={30}
                 type="text"
                 id="publisher"
                 autoComplete="on"
@@ -226,17 +226,21 @@ function Card1({ setOpen, setData, ...rest }: Props) {
                 placeholder="#"
               />
             </div>
-            <div className="isbn">
-              <label htmlFor="isbn">ISBN</label>
-              <input
-                maxLength={13}
-                type="text"
-                id="isbn"
-                value={isbn}
-                onChange={(e) => setISBN(e.target.value)}
-                placeholder="#"
-              />
-            </div>
+            {card === CardType.NewBook ? (
+              <div className="isbn">
+                <label htmlFor="isbn">ISBN</label>
+                <input
+                  maxLength={13}
+                  type="text"
+                  id="isbn"
+                  value={isbn}
+                  onChange={(e) => setISBN(e.target.value)}
+                  placeholder="#"
+                />
+              </div>
+            ) : (
+              ""
+            )}
             <div className="card-button">
               <Button1
                 className="cancel-button"
@@ -287,8 +291,7 @@ function Card1({ setOpen, setData, ...rest }: Props) {
     switch (card) {
       case CardType.NewBook:
         if (ConfirmRequiredNewBook()) {
-          setOpen(false);
-          return setData({
+          setData({
             isbn: isbn,
             title: title,
             author: author.lname + " " + author.fname,
@@ -296,19 +299,19 @@ function Card1({ setOpen, setData, ...rest }: Props) {
             pages: pages,
             type: CardType.NewBook,
           });
+          return setOpen(false);
         }
         return false;
       case CardType.EditBook:
         if (ConfirmRequiredEditBook()) {
-          setOpen(false);
-          return setData({
-            isbn: isbn,
+          setData({
             title: title,
-            author: author,
+            author: author.lname + " " + author.fname,
             publisher: publisher,
             pages: pages,
             type: CardType.EditBook,
           });
+          return setOpen(false);
         }
         return false;
       case CardType.DeleteBook:
@@ -318,8 +321,8 @@ function Card1({ setOpen, setData, ...rest }: Props) {
           type: CardType.DeleteBook,
         });
       default:
-        setOpen(false);
-        return setData(null);
+        setData(null);
+        return setOpen(false);
     }
   };
 

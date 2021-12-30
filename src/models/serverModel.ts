@@ -1,3 +1,5 @@
+import { CardType } from "../pages/Home/reusable/card1";
+
 export interface AddBookVM {
   isbn: string;
   title: string;
@@ -6,7 +8,7 @@ export interface AddBookVM {
   pages: number;
   publish: Date;
 }
-export interface AddBookVM {
+export interface UpdateBookVM {
   title: string;
   author: string;
   publisher: string;
@@ -19,3 +21,4 @@ export interface FindBookVM {
 export interface DeleteBookVM {
   isbn: string;
 }
+
