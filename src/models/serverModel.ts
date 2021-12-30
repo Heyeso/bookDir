@@ -6,7 +6,7 @@ export interface AddBookVM {
   pages: number;
   publish: Date;
 }
-export interface AddBookVM {
+export interface UpdateBookVM {
   title: string;
   author: string;
   publisher: string;

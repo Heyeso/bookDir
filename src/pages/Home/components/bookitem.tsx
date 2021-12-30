@@ -170,7 +170,7 @@ export default BookItem;
 function BookItemClosed({ book }: Props) {
   return (
     <>
-      <p className="year">{book.publish.getFullYear()}</p>
+      <p className="year">{new Date(book.publish).getFullYear()}</p>
       <p className="title">{book.title}</p>
       <p className="author">{book.author}</p>
       <p className="publisher">{book.publisher}</p>
@@ -181,10 +181,20 @@ function BookItemClosed({ book }: Props) {
 }
 
 function BookItemOpen({ book }: Props) {
-
   const [edit, setEdit] = useState(false);
   const [deletebook, setDeletebook] = useState(false);
   const [data, setData] = useState<Object | null>(null);
+
+  const getStringDate = (date: Date) => {
+    let dateToString = `${date.getFullYear()}`;
+    if (date.getMonth() < 10) dateToString += `-0${date.getMonth()}`;
+    else dateToString += `-${date.getMonth()}`;
+
+    if (date.getDay() < 10) dateToString += `-0${date.getDay()}`;
+    else dateToString += `-${date.getDay()}`;
+
+    return dateToString;
+  };
 
   return (
     <>
@@ -203,7 +213,7 @@ function BookItemOpen({ book }: Props) {
           </p>
           <p className="year">
             <span>Published: </span>
-            {book.publish.getFullYear()}
+            {getStringDate(new Date(book.publish))}
           </p>
           <p className="pages">
             <span>Pages: </span>
@@ -211,11 +221,27 @@ function BookItemOpen({ book }: Props) {
           </p>
         </div>
       </section>
-      <div title="Edit Book." className="editIcon" onClick={() => setEdit(true)}></div>
-      <div title="Delete Book." className="deleteIcon" onClick={() => setDeletebook(true)}></div>
+      <div
+        title="Edit Book."
+        className="editIcon"
+        onClick={() => setEdit(true)}
+      ></div>
+      <div
+        title="Delete Book."
+        className="deleteIcon"
+        onClick={() => setDeletebook(true)}
+      ></div>
       <div className="bookIcon"></div>
-      {edit && <Card1 tag={CardType.EditBook} setOpen={setEdit} setData={setData}/>}
-      {deletebook && <Card1 tag={CardType.DeleteBook} setOpen={setDeletebook} setData={setData}/>}
+      {edit && (
+        <Card1 tag={CardType.EditBook} setOpen={setEdit} setData={setData} />
+      )}
+      {deletebook && (
+        <Card1
+          tag={CardType.DeleteBook}
+          setOpen={setDeletebook}
+          setData={setData}
+        />
+      )}
     </>
   );
 }
