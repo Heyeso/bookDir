@@ -12,6 +12,7 @@ const PageContainer = styled.div`
   max-width: 1340px;
   margin: 0 auto;
   padding: 0 10px;
+  overflow: auto;
 `;
 const LogoContainer = styled.section`
   margin: 0 auto;
