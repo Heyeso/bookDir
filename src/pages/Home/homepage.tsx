@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { AddBookVM } from "../../models/serverModel";
 import { COLORS } from "../../utils/constants";
@@ -45,33 +45,7 @@ const BookListContainer = styled.section`
   height: fit-content;
   width: 100%;
 `;
-//note: Test Data, Delete
-const testBook: AddBookVM[] = [
-  {
-    isbn: "9781593275846",
-    title: "Eloquent JavaScript, Second Edition",
-    author: "Marijn Haverbeke",
-    publisher: "No Starch Press",
-    pages: 472,
-    publish: new Date("2019-01-16"),
-  },
-  {
-    isbn: "9781203495679",
-    title: "Elaborate C++, First Edition",
-    author: "Heyeso Hodetaryoh",
-    publisher: "Acer Nitro Seven",
-    pages: 123,
-    publish: new Date("2011-12-12"),
-  },
-  {
-    isbn: "9734567495679",
-    title: "Exenorative Java, Third Edition",
-    author: "Hardey Hodetaryoh",
-    publisher: "Dell Experion Seven",
-    pages: 143,
-    publish: new Date("2012-10-22"),
-  },
-];
+
 const EMPTY = "";
 const RESET_ITEM = 0;
 function HomePage() {
@@ -79,6 +53,19 @@ function HomePage() {
   const [search, setSearch] = useState(EMPTY);
   const [newbook, setNewbook] = useState(false);
   const [newBookData, setNewBookData] = useState<Object | null>(null);
+  const [data, setData] = useState<AddBookVM[]>([]);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/${process.env.REACT_APP_API_KEY}/book`, {
+      method: `GET`
+    })
+      .then((response) => response.json())
+      .then((dataBook) => {
+        setData(dataBook)
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <PageContainer>
       <LogoContainer>
@@ -99,7 +86,7 @@ function HomePage() {
         )}
       </SearchContainer>
       <BookListContainer>
-        {testBook.map((element, index) => (
+        {data.map((element, index) => (
           <BookItem
             key={index}
             book={element}
