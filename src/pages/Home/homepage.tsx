@@ -52,19 +52,76 @@ function HomePage() {
   const [currentItem, setCurrentItem] = useState(RESET_ITEM);
   const [search, setSearch] = useState(EMPTY);
   const [newbook, setNewbook] = useState(false);
-  const [newBookData, setNewBookData] = useState<Object | null>(null);
+  const [newBookData, setNewBookData] = useState<any>(null);
   const [data, setData] = useState<AddBookVM[]>([]);
+  const [refresh, setRefresh] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/${process.env.REACT_APP_API_KEY}/book`, {
-      method: `GET`
-    })
+    const fetchAll = async () => {
+      await fetch(
+        `http://localhost:3000/${process.env.REACT_APP_API_KEY}/book`,
+        {
+          method: `GET`,
+        }
+      )
+        .then((response) => response.json())
+        .then((dataBook) => {
+          setData(dataBook);
+        })
+        .catch((err) => console.log(err));
+    };
+
+    if (refresh) fetchAll();
+
+    return () => {
+      setRefresh(false);
+    };
+  }, [refresh]);
+
+  useEffect(() => {
+    const AddBook = async () => {
+      await fetch(
+        `http://localhost:3000/${process.env.REACT_APP_API_KEY}/book/add`,
+        {
+          method: `POST`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            isbn: newBookData.isbn,
+            title: newBookData.title,
+            author: newBookData.author,
+            publisher: newBookData.publisher,
+            pages: newBookData.pages,
+          }),
+        }
+      )
+        .then((response) => response.json())
+        .catch((err) => console.log(err));
+    };
+    if (newBookData !== null && newBookData.type === CardType.NewBook) {
+      AddBook();
+    }
+
+    return () => {
+      setRefresh(true);
+      setNewBookData(null);
+    };
+  }, [newBookData]);
+
+  const SearchForBook = async () => {
+    await fetch(
+      `http://localhost:3000/${process.env.REACT_APP_API_KEY}/book/${search}`,
+      {
+        method: `GET`,
+      }
+    )
       .then((response) => response.json())
       .then((dataBook) => {
-        setData(dataBook)
+        setData(dataBook);
       })
       .catch((err) => console.log(err));
-  }, []);
+  };
 
   return (
     <PageContainer>
@@ -75,7 +132,11 @@ function HomePage() {
         </LogoTitle>
       </LogoContainer>
       <SearchContainer>
-        <SearchBar search={search} setSearch={setSearch} />
+        <SearchBar
+          search={search}
+          setSearch={setSearch}
+          SearchForBook={SearchForBook}
+        />
         <AddNewBook title="Add new book." onClick={() => setNewbook(true)} />
         {newbook && (
           <Card1
@@ -86,14 +147,17 @@ function HomePage() {
         )}
       </SearchContainer>
       <BookListContainer>
-        {data.map((element, index) => (
-          <BookItem
-            key={index}
-            book={element}
-            onClick={() => setCurrentItem(index)}
-            open={currentItem === index}
-          />
-        ))}
+        {data.length === 0 && <div>Book does Not Exist</div>}
+        {data.length > 0 &&
+          data.map((element, index) => (
+            <BookItem
+              key={index}
+              book={element}
+              onClick={() => setCurrentItem(index)}
+              open={currentItem === index}
+              setRefresh={setRefresh}
+            />
+          ))}
       </BookListContainer>
     </PageContainer>
   );

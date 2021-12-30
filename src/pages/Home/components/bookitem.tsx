@@ -152,22 +152,27 @@ interface Props {
   book: AddBookVM;
   open?: boolean;
   onClick?: React.MouseEventHandler;
+  setRefresh: (value: boolean) => void;
 }
 
-function BookItem({ book, open, ...rest }: Props) {
+function BookItem({ book, open, setRefresh, ...rest }: Props) {
   return (
     <BookItemContainer
       {...rest}
       className={open ? "bookItem open" : "bookItem closed"}
     >
-      {open ? <BookItemOpen book={book} /> : <BookItemClosed book={book} />}
+      {open ? (
+        <BookItemOpen book={book} setRefresh={setRefresh} />
+      ) : (
+        <BookItemClosed book={book} setRefresh={setRefresh} />
+      )}
     </BookItemContainer>
   );
 }
 
 export default BookItem;
 
-function BookItemClosed({ book }: Props) {
+function BookItemClosed({ book, ...rest }: Props) {
   return (
     <>
       <p className="year">{new Date(book.publish).getFullYear()}</p>
@@ -180,11 +185,65 @@ function BookItemClosed({ book }: Props) {
   );
 }
 
-function BookItemOpen({ book }: Props) {
+function BookItemOpen({ book, setRefresh }: Props) {
   const [edit, setEdit] = useState(false);
   const [deletebook, setDeletebook] = useState(false);
-  const [data, setData] = useState<Object | null>(null);
+  const [data, setData] = useState<any>(null);
 
+  useEffect(() => {
+    const EditBook = async () => {
+      const dataToUpdate = {
+        isbn: book.isbn,
+        title: data.title === "" ? null : data.title,
+        author: data.author === "" ? null : data.author,
+        publisher: data.publisher === "" ? null : data.publisher,
+        pages: data.pages === "" ? null : data.pages,
+      };
+      if (dataToUpdate.title === null) delete dataToUpdate.title;
+      if (dataToUpdate.author === null) delete dataToUpdate.author;
+      if (dataToUpdate.publisher === null) delete dataToUpdate.publisher;
+      if (dataToUpdate.pages === null) delete dataToUpdate.pages;
+      await fetch(
+        `http://localhost:3000/${process.env.REACT_APP_API_KEY}/book/update`,
+        {
+          method: `PUT`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToUpdate),
+        }
+      )
+        .then((response) => response.json())
+        .catch((err) => console.log(err));
+    };
+    const DeleteBook = async () => {
+      await fetch(
+        `http://localhost:3000/${process.env.REACT_APP_API_KEY}/book/delete`,
+        {
+          method: `DELETE`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            isbn: book.isbn,
+          }),
+        }
+      )
+        .then((response) => response.json())
+        .catch((err) => console.log(err));
+    };
+    if (data !== null && data.type === CardType.EditBook) {
+      EditBook();
+    }
+    if (data !== null && data.type === CardType.DeleteBook) {
+      DeleteBook();
+    }
+
+    return () => {
+      setRefresh(true);
+      setData(null);
+    };
+  }, [data]);
   const getStringDate = (date: Date) => {
     let dateToString = `${date.getFullYear()}`;
     if (date.getMonth() < 10) dateToString += `-0${date.getMonth()}`;

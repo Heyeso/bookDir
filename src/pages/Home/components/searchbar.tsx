@@ -47,9 +47,10 @@ const SearchInput = styled.input`
 interface Props {
   search: string;
   setSearch: (search: string) => void;
+  SearchForBook: () => void;
 }
 const EMPTY = "";
-function SearchBar({ search, setSearch }: Props) {
+function SearchBar({ search, setSearch, SearchForBook }: Props) {
   return (
     <SearchBarContainer>
       <SearchInput
@@ -58,7 +59,7 @@ function SearchBar({ search, setSearch }: Props) {
         placeholder="Search for a book..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        onKeyDown={(e) => (e.key === "Enter" ? "search" : true)}
+        onKeyDown={(e) => (e.key === "Enter" ? SearchForBook() : true)}
       />
       <div
         title="Clear."
@@ -68,7 +69,7 @@ function SearchBar({ search, setSearch }: Props) {
       <div
         title="Search."
         className="searchIcon"
-        onClick={() => "search"}
+        onClick={() => SearchForBook()}
       ></div>
     </SearchBarContainer>
   );
