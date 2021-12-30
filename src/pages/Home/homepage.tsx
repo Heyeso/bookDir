@@ -59,7 +59,7 @@ function HomePage() {
   useEffect(() => {
     const fetchAll = async () => {
       await fetch(
-        `http://localhost:3000/${process.env.REACT_APP_API_KEY}/book`,
+        `https://book-dir-js.herokuapp.com/${process.env.REACT_APP_API_KEY}/book`,
         {
           method: `GET`,
         }
@@ -81,7 +81,7 @@ function HomePage() {
   useEffect(() => {
     const AddBook = async () => {
       await fetch(
-        `http://localhost:3000/${process.env.REACT_APP_API_KEY}/book/add`,
+        `https://book-dir-js.herokuapp.com/${process.env.REACT_APP_API_KEY}/book/add`,
         {
           method: `POST`,
           headers: {
@@ -111,7 +111,7 @@ function HomePage() {
 
   const SearchForBook = async () => {
     await fetch(
-      `http://localhost:3000/${process.env.REACT_APP_API_KEY}/book/${search}`,
+      `https://book-dir-js.herokuapp.com/${process.env.REACT_APP_API_KEY}/book/${search}`,
       {
         method: `GET`,
       }

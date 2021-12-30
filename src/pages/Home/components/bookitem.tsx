@@ -204,7 +204,7 @@ function BookItemOpen({ book, setRefresh }: Props) {
       if (dataToUpdate.publisher === null) delete dataToUpdate.publisher;
       if (dataToUpdate.pages === null) delete dataToUpdate.pages;
       await fetch(
-        `http://localhost:3000/${process.env.REACT_APP_API_KEY}/book/update`,
+        `https://book-dir-js.herokuapp.com/${process.env.REACT_APP_API_KEY}/book/update`,
         {
           method: `PUT`,
           headers: {
@@ -218,7 +218,7 @@ function BookItemOpen({ book, setRefresh }: Props) {
     };
     const DeleteBook = async () => {
       await fetch(
-        `http://localhost:3000/${process.env.REACT_APP_API_KEY}/book/delete`,
+        `https://book-dir-js.herokuapp.com/${process.env.REACT_APP_API_KEY}/book/delete`,
         {
           method: `DELETE`,
           headers: {
