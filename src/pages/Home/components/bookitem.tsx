@@ -54,10 +54,59 @@ const BookItemContainer = styled.div`
       height: 40px;
       margin: 0px;
       padding: 0px;
+      background-position: center;
+      background-size: contain;
       background-image: url(${ClosedBookIcon});
     }
     &:hover {
       background-color: ${COLORS.LIGHT_BLUE};
+    }
+    @media (hover: none) {
+      &:hover {
+        background-color: ${COLORS.GRAY4};
+      }
+      &:active {
+        background-color: ${COLORS.LIGHT_BLUE};
+      }
+    }
+    @media (max-width: 1024px) {
+      padding: 0px 20px;
+      height: 50px;
+      .year {
+        font-size: 16px;
+      }
+      .title {
+        margin-left: 15px;
+        font-size: 18px;
+      }
+      .author,
+      .publisher,
+      .pages {
+        margin-right: 20px;
+        font-size: 14px;
+      }
+      .bookIcon {
+        width: 30px;
+        height: 30px;
+      }
+    }
+    @media (max-width: 768px) {
+      padding: 0px 10px;
+      .year {
+        font-size: 14px;
+      }
+      .title {
+        margin-left: 10px;
+        font-size: 16px;
+      }
+      .author,
+      .publisher,
+      .pages {
+        display: none;
+      }
+      .bookIcon {
+        margin-left: auto;
+      }
     }
   }
   &.open {
@@ -113,6 +162,10 @@ const BookItemContainer = styled.div`
         }
       }
     }
+    .icons {
+      display: flex;
+      margin-left: auto;
+    }
     .bookIcon,
     .editIcon,
     .deleteIcon {
@@ -122,10 +175,11 @@ const BookItemContainer = styled.div`
       padding: 0px;
       background-image: url(${OpenedBookIcon});
       opacity: 0.6;
+      background-position: center;
+      background-size: contain;
     }
     .editIcon {
       cursor: pointer;
-      margin-left: auto;
       background-image: url(${EditIcon});
       opacity: 0.5;
       &:hover {
@@ -143,6 +197,68 @@ const BookItemContainer = styled.div`
     &:hover {
       .bookIcon {
         opacity: 1;
+      }
+    }
+    @media (hover: none) {
+      .deleteIcon,
+      .editIcon {
+        opacity: 1;
+      }
+    }
+    @media (max-width: 1024px) {
+      flex-direction: column;
+      text-align: center;
+      .placeholder {
+        display: none;
+      }
+      .info {
+        margin: 0 auto;
+        width: fit-content;
+        align-items: center;
+        .title {
+          width: fit-content;
+          font-size: 20px;
+        }
+        .author {
+          width: fit-content;
+          font-size: 14px;
+          font-family: "Noto Sans regular";
+        }
+        & > div {
+          flex-direction: column;
+          align-items: center;
+          margin: 10px 0px 0px;
+          .publisher,
+          .isbn,
+          .year,
+          .pages {
+            margin: 0;
+            font-size: 16px;
+            span {
+              font-size: 12px;
+              font-family: "Noto Sans regular";
+            }
+          }
+        }
+      }
+      .icons {
+        margin: 15px auto 0;
+        width: fit-content;
+      }
+      .bookIcon,
+      .editIcon,
+      .deleteIcon {
+        width: 35px;
+        height: 35px;
+        margin: 0 5px;
+      }
+    }
+    @media (max-width: 1024px) {
+      .bookIcon,
+      .editIcon,
+      .deleteIcon {
+        width: 30px;
+        height: 30px;
       }
     }
   }
@@ -173,10 +289,15 @@ function BookItem({ book, open, setRefresh, ...rest }: Props) {
 export default BookItem;
 
 function BookItemClosed({ book, ...rest }: Props) {
+  const { width, height } = useWindowDimensions();
   return (
     <>
       <p className="year">{new Date(book.publish).getFullYear()}</p>
-      <p className="title">{book.title}</p>
+      <p className="title">
+        {book.title.length > 30 && width < 1024
+          ? book.title.substring(0, 30) + "..."
+          : book.title}
+      </p>
       <p className="author">{book.author}</p>
       <p className="publisher">{book.publisher}</p>
       <p className="pages">{book.pages}</p>
@@ -280,17 +401,19 @@ function BookItemOpen({ book, setRefresh }: Props) {
           </p>
         </div>
       </section>
-      <div
-        title="Edit Book."
-        className="editIcon"
-        onClick={() => setEdit(true)}
-      ></div>
-      <div
-        title="Delete Book."
-        className="deleteIcon"
-        onClick={() => setDeletebook(true)}
-      ></div>
-      <div className="bookIcon"></div>
+      <section className="icons">
+        <div
+          title="Edit Book."
+          className="editIcon"
+          onClick={() => setEdit(true)}
+        ></div>
+        <div
+          title="Delete Book."
+          className="deleteIcon"
+          onClick={() => setDeletebook(true)}
+        ></div>
+        <div className="bookIcon"></div>
+      </section>
       {edit && (
         <Card1 tag={CardType.EditBook} setOpen={setEdit} setData={setData} />
       )}
@@ -304,3 +427,27 @@ function BookItemOpen({ book, setRefresh }: Props) {
     </>
   );
 }
+
+const getWindowDimensions = () => {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height,
+  };
+};
+const useWindowDimensions = () => {
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  );
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowDimensions;
+};
