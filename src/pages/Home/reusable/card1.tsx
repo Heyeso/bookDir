@@ -328,7 +328,10 @@ function Card1({ setOpen, setData, ...rest }: Props) {
         if (ConfirmRequiredEditBook()) {
           setData({
             title: title,
-            author: author.lname + " " + author.fname,
+            author:
+              author.lname === "" && author.fname === ""
+                ? ""
+                : author.lname + " " + author.fname,
             publisher: publisher,
             pages: pages,
             type: CardType.EditBook,

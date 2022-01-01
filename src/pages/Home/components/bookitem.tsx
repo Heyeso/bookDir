@@ -269,18 +269,37 @@ interface Props {
   open?: boolean;
   onClick?: React.MouseEventHandler;
   setRefresh: (value: boolean) => void;
+  setSuccess: (value: number | null) => void;
+  setNotification: (value: boolean) => void;
 }
 
-function BookItem({ book, open, setRefresh, ...rest }: Props) {
+function BookItem({
+  book,
+  open,
+  setRefresh,
+  setSuccess,
+  setNotification,
+  ...rest
+}: Props) {
   return (
     <BookItemContainer
       {...rest}
       className={open ? "bookItem open" : "bookItem closed"}
     >
       {open ? (
-        <BookItemOpen book={book} setRefresh={setRefresh} />
+        <BookItemOpen
+          book={book}
+          setRefresh={setRefresh}
+          setSuccess={setSuccess}
+          setNotification={setNotification}
+        />
       ) : (
-        <BookItemClosed book={book} setRefresh={setRefresh} />
+        <BookItemClosed
+          book={book}
+          setRefresh={setRefresh}
+          setSuccess={setSuccess}
+          setNotification={setNotification}
+        />
       )}
     </BookItemContainer>
   );
@@ -288,7 +307,7 @@ function BookItem({ book, open, setRefresh, ...rest }: Props) {
 
 export default BookItem;
 
-function BookItemClosed({ book, ...rest }: Props) {
+function BookItemClosed({ book, setSuccess, setNotification, ...rest }: Props) {
   const { width, height } = useWindowDimensions();
   return (
     <>
@@ -306,7 +325,12 @@ function BookItemClosed({ book, ...rest }: Props) {
   );
 }
 
-function BookItemOpen({ book, setRefresh }: Props) {
+function BookItemOpen({
+  book,
+  setRefresh,
+  setSuccess,
+  setNotification,
+}: Props) {
   const [edit, setEdit] = useState(false);
   const [deletebook, setDeletebook] = useState(false);
   const [data, setData] = useState<any>(null);
@@ -334,8 +358,14 @@ function BookItemOpen({ book, setRefresh }: Props) {
           body: JSON.stringify(dataToUpdate),
         }
       )
-        .then((response) => response.json())
+        .then((response) => {
+          setSuccess(response.status);
+          setNotification(true);
+          return response.json();
+        })
         .catch((err) => console.log(err));
+      setData(null);
+      setRefresh(true);
     };
     const DeleteBook = async () => {
       await fetch(
@@ -350,8 +380,14 @@ function BookItemOpen({ book, setRefresh }: Props) {
           }),
         }
       )
-        .then((response) => response.json())
+        .then((response) => {
+          setSuccess(response.status);
+          setNotification(true);
+          return response.json();
+        })
         .catch((err) => console.log(err));
+      setRefresh(true);
+      setData(null);
     };
     if (data !== null && data.type === CardType.EditBook) {
       EditBook();
@@ -359,11 +395,6 @@ function BookItemOpen({ book, setRefresh }: Props) {
     if (data !== null && data.type === CardType.DeleteBook) {
       DeleteBook();
     }
-
-    return () => {
-      setRefresh(true);
-      setData(null);
-    };
   }, [data]);
   const getStringDate = (date: Date) => {
     let dateToString = `${date.getFullYear()}`;
