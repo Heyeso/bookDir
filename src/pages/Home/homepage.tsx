@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { AddBookVM } from "../../models/serverModel";
 import { COLORS } from "../../utils/constants";
@@ -8,6 +8,8 @@ import Logo from "./components/logo";
 import SearchBar from "./components/searchbar";
 import Card1, { CardType } from "./reusable/card1";
 import BookIcon from "./../../assets/books.icon.svg";
+import CancelIcon from "./../../assets/fail.icon.svg";
+import SuccessIcon from "./../../assets/success.icon.svg";
 
 const PageContainer = styled.div`
   max-width: 1340px;
@@ -72,6 +74,8 @@ function HomePage() {
   const [data, setData] = useState<AddBookVM[]>([]);
   const [refresh, setRefresh] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<number | null>(null);
+  const [notification, setNotification] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -88,11 +92,10 @@ function HomePage() {
         })
         .catch((err) => console.log(err));
       setIsLoading(false);
+      setRefresh(false);
     };
 
     if (refresh) fetchAll();
-
-    setRefresh(false);
   }, [refresh]);
 
   useEffect(() => {
@@ -114,17 +117,20 @@ function HomePage() {
           }),
         }
       )
-        .then((response) => response.json())
+        .then((response) => {
+          setSuccess(response.status);
+          setNotification(true);
+          return response.json();
+        })
         .catch((err) => console.log(err));
 
       setIsLoading(false);
+      setRefresh(true);
+      setNewBookData(null);
     };
     if (newBookData !== null && newBookData.type === CardType.NewBook) {
       AddBook();
     }
-
-    setRefresh(true);
-    setNewBookData(null);
   }, [newBookData]);
 
   const SearchForBook = async () => {
@@ -181,6 +187,8 @@ function HomePage() {
             <BookItem
               key={index}
               book={element}
+              setSuccess={setSuccess}
+              setNotification={setNotification}
               onClick={() => setCurrentItem(index)}
               open={currentItem === index}
               setRefresh={setRefresh}
@@ -188,6 +196,12 @@ function HomePage() {
           ))}
         {isLoading && <DataPlaceholder />}
       </BookListContainer>
+      {notification && (
+        <Notification
+          status={success}
+          setNotification={setNotification}
+        ></Notification>
+      )}
     </PageContainer>
   );
 }
@@ -358,5 +372,86 @@ const DataPlaceholder = () => {
         <div className="pages-place"></div>
       </DataPlaceholderContainer>
     </div>
+  );
+};
+
+interface NotificationProps {
+  status: number | null;
+  children?: ReactNode;
+  setNotification: (value: boolean) => void;
+}
+const NotificationContainer = styled.div`
+  width: fit-content;
+  height: fit-content;
+  font-size: 16px;
+  position: fixed;
+  font-family: "Noto Sans medium";
+  align-content: center;
+  margin: 0 auto;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  @media (max-width: 1024px) {
+    font-size: 14px;
+  }
+  .success,
+  .fail {
+    padding: 5px 20px;
+    border-radius: 500px;
+    display: flex;
+    align-items: center;
+  }
+  .success {
+    color: ${COLORS.GRAY4};
+    background-color: ${COLORS.GREEN};
+  }
+  .fail {
+    color: ${COLORS.GRAY5};
+    background-color: ${COLORS.RED1};
+  }
+  .failIcon,
+  .successIcon {
+    width: 25px;
+    height: 25px;
+    margin: 0 5px 0 0;
+    padding: 0px;
+    border-radius: 500px;
+    background-position: center;
+    background-size: contain;
+  }
+  .successIcon {
+    border: 2px solid ${COLORS.GRAY4};
+    background-image: url(${SuccessIcon});
+  }
+  .failIcon {
+    border: 2px solid ${COLORS.GRAY5};
+    background-image: url(${CancelIcon});
+  }
+`;
+
+export const Notification = ({
+  status,
+  children,
+  setNotification,
+}: NotificationProps) => {
+  useEffect(() => {
+    setTimeout(() => {
+      setNotification(false);
+    }, 3000);
+  }, []);
+  return (
+    <NotificationContainer>
+      {status === 200 ? (
+        <div className="success">
+          <div className="successIcon"></div>
+          Success
+        </div>
+      ) : (
+        <div className="fail">
+          <div className="failIcon"></div>
+          Failed
+        </div>
+      )}
+    </NotificationContainer>
   );
 };
