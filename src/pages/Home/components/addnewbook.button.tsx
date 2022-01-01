@@ -15,12 +15,21 @@ const ButtonContainer = styled.button`
       stroke: ${COLORS.GRAY1};
     }
   }
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
 `;
 interface Props {
   title?: string | undefined;
   onClick?: () => void;
 }
-function AddNewBook({title, ...rest}: Props) {
+function AddNewBook({ title, ...rest }: Props) {
   return (
     <ButtonContainer title={title} {...rest}>
       <svg

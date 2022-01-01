@@ -36,7 +36,7 @@ const Bg = styled.div`
   transform: translateZ(0);
 `;
 const CardComponent = styled.section`
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -48,12 +48,20 @@ const CardComponent = styled.section`
   padding-bottom: 30px;
   background-color: ${COLORS.GRAY4};
   border-radius: 10px;
+  @media (max-width: 500px) {
+    max-width: 98vw;
+  }
   .card-title {
     font-family: "Noto Sans medium";
     font-size: 24px;
     letter-spacing: -0.25px;
     color: ${COLORS.GRAY3};
     margin: 0 0 20px;
+    @media (max-width: 500px) {
+      font-size: 20px;
+      letter-spacing: -0.3px;
+      margin: 0 0 10px;
+    }
   }
   & > .title,
   .author,
@@ -68,6 +76,10 @@ const CardComponent = styled.section`
       color: ${COLORS.GRAY6};
       margin: 0;
       margin-bottom: 10px;
+      @media (max-width: 500px) {
+        margin: 0 0 5px;
+        font-size: 14px;
+      }
     }
     input {
       width: 100%;
@@ -84,6 +96,12 @@ const CardComponent = styled.section`
       &:focus {
         outline: none;
       }
+      @media (max-width: 500px) {
+        font-size: 14px;
+      }
+    }
+    @media (max-width: 500px) {
+      margin: 0 0 5px;
     }
   }
   & > .author {
@@ -102,7 +120,11 @@ const CardComponent = styled.section`
   }
   & > .pages {
     margin-right: 20px;
+    width: 100%;
     max-width: 100px;
+    @media (max-width: 500px) {
+      margin-right: 5px;
+    }
   }
   & > .isbn {
     max-width: 200px;

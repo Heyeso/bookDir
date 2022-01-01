@@ -11,9 +11,11 @@ import BookIcon from "./../../assets/books.icon.svg";
 
 const PageContainer = styled.div`
   max-width: 1340px;
+  height: 100%;
   margin: 0 auto;
   padding: 0 10px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 `;
 const LogoContainer = styled.section`
   margin: 0 auto;
@@ -23,6 +25,12 @@ const LogoContainer = styled.section`
   padding: 0;
   width: fit-content;
   height: fit-content;
+  @media (max-width: 768px) {
+    margin-top: 80px;
+    svg {
+      transform: scale(0.8);
+    }
+  }
 `;
 const LogoTitle = styled.p`
   margin: 0;
@@ -33,6 +41,10 @@ const LogoTitle = styled.p`
   & span {
     color: ${COLORS.LIGHT_BLUE};
   }
+  @media (max-width: 768px) {
+    font-size: 36px;
+    margin-left: 0;
+  }
 `;
 const SearchContainer = styled.section`
   height: 50px;
@@ -40,6 +52,9 @@ const SearchContainer = styled.section`
   margin-top: 50px;
   align-items: center;
   width: 100%;
+  @media (max-width: 768px) {
+    height: 40px;
+  }
 `;
 const BookListContainer = styled.section`
   margin: 50px auto 0;
